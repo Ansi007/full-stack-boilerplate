@@ -1,5 +1,5 @@
 {
-  "name": "be-tech-stack-turbo",
+  "name": "app",
   "private": true,
   "scripts": {
     "build": "turbo run build",
