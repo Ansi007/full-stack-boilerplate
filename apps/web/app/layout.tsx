@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import TrpcProvider from "@repo/trpc/TrpcProvider";
 
 export const metadata: Metadata = {
   title: "BE: Tech Stack",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <TrpcProvider url={process.env.NEXT_PUBLIC_TRPC_URL!}>
+          {children}
+        </TrpcProvider>
       </body>
     </html>
   );
