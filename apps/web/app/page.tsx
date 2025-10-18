@@ -4,22 +4,26 @@ import { useState } from "react";
 import { trpc } from "@repo/trpc/client";
 
 export default function Home() {
-  return (
-    <CrudTestUI />
-  );
+  return <CrudTestUI />;
 }
 
 function CrudTestUI() {
   const utils = trpc.useUtils();
   const [content, setContent] = useState("");
 
-  // ✅ Queries
-  const crudList = trpc.crud.findAll.useQuery();
-
-  // ✅ Mutations
-  const createCrud = trpc.crud.createCrud.useMutation({
-    onSuccess: () => utils.crud.findAll.invalidate(),
+  // Queries
+  const crudList = trpc.crud.findAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
   });
+
+  // Mutations
+  const createCrud = trpc.crud.createCrud.useMutation({
+    onSuccess: () => {
+      utils.crud.findAll.invalidate();
+      setContent("");
+    },
+  });
+
   const deleteCrud = trpc.crud.deleteCrud.useMutation({
     onSuccess: () => utils.crud.findAll.invalidate(),
   });
@@ -27,51 +31,57 @@ function CrudTestUI() {
   const handleCreate = () => {
     if (!content.trim()) return;
     createCrud.mutate({ content });
-    setContent("");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6">tRPC CRUD Test UI</h1>
+    <main className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-8">
+      <h1 className="text-2xl font-bold text-gray-800 mb-8">tRPC CRUD Demo</h1>
 
-      {/* Create */}
-      <div className="flex gap-2 mb-6">
+      {/* Input */}
+      <div className="flex gap-2 mb-6 w-full max-w-md">
         <input
-          className="border p-2 rounded w-64"
-          placeholder="Enter content"
+          className="flex-1 border border-gray-300 rounded px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          placeholder="Enter new item..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          disabled={createCrud.isPending}
         />
         <button
           onClick={handleCreate}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          disabled={!content.trim() || createCrud.isPending}
+          className={`px-4 py-2 rounded text-white transition 
+            ${createCrud.isPending ? "bg-blue-300" : "bg-blue-500 hover:bg-blue-600"}`}
         >
-          Add
+          {createCrud.isPending ? "Adding..." : "Add"}
         </button>
       </div>
 
-      <div className="w-80 bg-white rounded shadow p-4">
+      {/* List */}
+      <section className="w-full max-w-md bg-white rounded shadow p-4">
         {crudList.isLoading ? (
-          <p>Loading...</p>
+          <p className="text-gray-500">Loading items...</p>
         ) : crudList.data && crudList.data.length > 0 ? (
           crudList.data.map((item) => (
             <div
               key={item.id}
-              className="flex justify-between items-center border-b py-2"
+              className="flex justify-between items-center py-2 border-b last:border-0"
             >
-              <span>{item.content}</span>
+              <span className="text-gray-700">{item.content}</span>
               <button
                 onClick={() => deleteCrud.mutate({ id: item.id })}
-                className="text-red-500 hover:underline"
+                disabled={deleteCrud.isPending}
+                className={`text-sm text-red-500 hover:text-red-600 ${
+                  deleteCrud.isPending ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Delete
+                {deleteCrud.isPending ? "..." : "Delete"}
               </button>
             </div>
           ))
         ) : (
-          <p className="text-gray-500">No items yet</p>
+          <p className="text-gray-500 text-center">No items found</p>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
