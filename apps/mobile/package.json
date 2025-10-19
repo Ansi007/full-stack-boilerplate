@@ -12,7 +12,6 @@
     "lint": "expo lint"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
     "@repo/trpc": "workspace:*",
     "@expo/vector-icons": "^15.0.2",
     "@react-navigation/bottom-tabs": "^7.4.0",
