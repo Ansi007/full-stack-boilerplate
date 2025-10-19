@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 import { TRPCModule } from 'nestjs-trpc';
 import { CrudModule } from './crud/crud.module';
 
@@ -12,4 +13,8 @@ import { CrudModule } from './crud/crud.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
