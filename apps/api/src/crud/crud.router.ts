@@ -21,12 +21,12 @@ export class CrudRouter {
     input: CreateCrudRequest,
     output: CreateCrudResponse,
   })
-  createCrud(@Input() data: CreateCrudRequest): CreateCrudResponse {
-    const success = this.crudService.create(data.content);
+  createCrud(@Input() req: CreateCrudRequest): CreateCrudResponse {
+    const success = this.crudService.create(req.content);
     return {
       success,
       data: success
-        ? { id: Date.now().toString(), content: data.content }
+        ? { id: Date.now().toString(), content: req.content }
         : undefined,
     };
   }
@@ -44,8 +44,8 @@ export class CrudRouter {
     input: FindOneCrudRequest,
     output: FindOneCrudResponse,
   })
-  findOne(@Input('id') id: string): FindOneCrudResponse {
-    return this.crudService.findOne(id);
+  findOne(@Input() req: FindOneCrudRequest): FindOneCrudResponse {
+    return this.crudService.findOne(req.id);
   }
 
   /* 🟣 UPDATE */
@@ -53,11 +53,8 @@ export class CrudRouter {
     input: UpdateCrudRequest,
     output: UpdateCrudResponse,
   })
-  updateCrud(
-    @Input('id') id: string,
-    @Input('data') data: UpdateCrudRequest['data'],
-  ): UpdateCrudResponse {
-    return this.crudService.update(id, data);
+  updateCrud(@Input() req: UpdateCrudRequest): UpdateCrudResponse {
+    return this.crudService.update(req.id, req.data);
   }
 
   /* 🔴 DELETE */
