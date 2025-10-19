@@ -1,3 +1,4 @@
+// app/index.tsx
 import { useState } from 'react';
 import {
   View,
@@ -87,6 +88,8 @@ const styles = StyleSheet.create({
     borderColor: '#334155',
     overflow: 'hidden',
     flex: 1,
+    minHeight: 200,
+    maxHeight: 400,
   },
   listHeader: {
     backgroundColor: '#334155',
@@ -157,9 +160,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginTop: 16,
   },
-  footerText: {
-    color: '#64748b',
-    fontSize: 12,
+  refreshButton: {
+    backgroundColor: '#3b82f6',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+    marginBottom: 12,
+  },
+  refreshButtonText: {
+    color: '#ffffff',
+    fontWeight: '600',
+    fontSize: 14,
   },
 });
 
@@ -177,6 +188,7 @@ export default function CrudPage() {
   // Queries
   const crudList = trpc.crud.findAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
 
   // Mutations
@@ -206,7 +218,11 @@ export default function CrudPage() {
 
   const handleUpdate = (id: string) => {
     if (!editingContent.trim()) return;
-    updateCrud?.mutate({ id, data: { content: editingContent }});
+    updateCrud?.mutate({ id, data: { content: editingContent } });
+  };
+
+  const handleRefresh = () => {
+    utils.crud.findAll.invalidate();
   };
 
   const renderItem = ({ item }: { item: CrudItem }) => (
@@ -259,6 +275,7 @@ export default function CrudPage() {
   );
 
   return (
+    <View style={styles.container}>
       <View style={styles.safeArea}>
         <View style={styles.content}>
           {/* Header */}
@@ -291,6 +308,17 @@ export default function CrudPage() {
             </TouchableOpacity>
           </View>
 
+          {/* Refresh Button */}
+          <TouchableOpacity
+            style={styles.refreshButton}
+            onPress={handleRefresh}
+            disabled={crudList.isRefetching}
+          >
+            <Text style={styles.refreshButtonText}>
+              {crudList.isRefetching ? 'Refreshing...' : 'Refresh'}
+            </Text>
+          </TouchableOpacity>
+
           {/* List Section */}
           <View style={styles.listContainer}>
             {crudList.isLoading ? (
@@ -317,7 +345,10 @@ export default function CrudPage() {
               </View>
             )}
           </View>
+
+
         </View>
       </View>
+    </View>
   );
 }
