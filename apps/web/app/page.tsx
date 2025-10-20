@@ -10,7 +10,7 @@ export default function Home() {
 function CrudTestUI() {
   const utils = trpc.useUtils();
   const [content, setContent] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editingContent, setEditingContent] = useState("");
 
   // Queries

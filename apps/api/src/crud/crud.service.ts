@@ -1,50 +1,65 @@
-// crud.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CrudEntity } from './crud.schema';
+import { PrismaService } from '../prisma/prisma.service';
+import { Crud } from '../../generated/prisma';
 
 @Injectable()
 export class CrudService {
-  private readonly cruds: CrudEntity[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  create(content: string): boolean {
-    const id: string = Date.now().toString();
-    const crud: CrudEntity = { id, content };
+  async create(content: string): Promise<boolean> {
+    if (!content) {
+      throw new NotFoundException();
+    }
 
-    const previousLength = this.cruds.length;
-    this.cruds.push(crud);
-
-    return this.cruds.length > previousLength;
+    try {
+      await this.prisma.crud.create({
+        data: { content },
+      });
+      return true;
+    } catch (error: any) {
+      console.error('Error creating item:', error);
+      return false;
+    }
   }
 
-  findAll(): CrudEntity[] {
-    return this.cruds;
+  async findAll(): Promise<Crud[]> {
+    return this.prisma.crud.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  findOne(id: string): CrudEntity {
-    const crud = this.cruds.find((item) => item.id === id);
+  async findOne(id: number): Promise<Crud> {
+    const crud = await this.prisma.crud.findUnique({
+      where: { id },
+    });
+
     if (!crud) {
       throw new NotFoundException(`Item with id "${id}" not found`);
     }
+
     return crud;
   }
 
-  update(id: string, updatedCrud: Partial<CrudEntity>): CrudEntity {
-    const index = this.cruds.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`Item with id "${id}" not found`);
+  async update(id: number, data: Partial<Crud>): Promise<Crud> {
+    try {
+      return await this.prisma.crud.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      throw new NotFoundException(`Item with id "${id}" not found ${error}`);
     }
-
-    this.cruds[index] = { ...this.cruds[index], ...updatedCrud };
-    return this.cruds[index];
   }
 
-  // TODO: (It/All (api(s) should return Custom Error Code)
-  delete(id: string): void {
-    const index = this.cruds.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`Item with id "${id}" not found`);
-    }
+  async delete(id: number): Promise<boolean> {
+    await this.prisma.crud.delete({
+      where: { id },
+    });
 
-    this.cruds.splice(index, 1);
+    const found = await this.prisma.crud.findFirst({
+      where: { id },
+    });
+
+    return !found;
   }
 }

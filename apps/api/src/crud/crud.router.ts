@@ -21,13 +21,12 @@ export class CrudRouter {
     input: CreateCrudRequest,
     output: CreateCrudResponse,
   })
-  createCrud(@Input() req: CreateCrudRequest): CreateCrudResponse {
-    const success = this.crudService.create(req.content);
+  async createCrud(
+    @Input() req: CreateCrudRequest,
+  ): Promise<CreateCrudResponse> {
+    const success = await this.crudService.create(req.content);
     return {
       success,
-      data: success
-        ? { id: Date.now().toString(), content: req.content }
-        : undefined,
     };
   }
 
@@ -35,8 +34,8 @@ export class CrudRouter {
   @Query({
     output: FindAllCrudResponse,
   })
-  findAll(): FindAllCrudResponse {
-    return this.crudService.findAll();
+  async findAll(): Promise<FindAllCrudResponse> {
+    return await this.crudService.findAll();
   }
 
   /* 🟠 FIND ONE */
@@ -44,8 +43,10 @@ export class CrudRouter {
     input: FindOneCrudRequest,
     output: FindOneCrudResponse,
   })
-  findOne(@Input() req: FindOneCrudRequest): FindOneCrudResponse {
-    return this.crudService.findOne(req.id);
+  async findOne(
+    @Input() req: FindOneCrudRequest,
+  ): Promise<FindOneCrudResponse> {
+    return await this.crudService.findOne(req.id);
   }
 
   /* 🟣 UPDATE */
@@ -53,8 +54,10 @@ export class CrudRouter {
     input: UpdateCrudRequest,
     output: UpdateCrudResponse,
   })
-  updateCrud(@Input() req: UpdateCrudRequest): UpdateCrudResponse {
-    return this.crudService.update(req.id, req.data);
+  async updateCrud(
+    @Input() req: UpdateCrudRequest,
+  ): Promise<UpdateCrudResponse> {
+    return await this.crudService.update(req.id, req.data);
   }
 
   /* 🔴 DELETE */
@@ -62,10 +65,10 @@ export class CrudRouter {
     input: DeleteCrudRequest,
     output: DeleteCrudResponse,
   })
-  deleteCrud(@Input('id') id: string): DeleteCrudResponse {
-    const before = this.crudService.findAll().length;
-    this.crudService.delete(id);
-    const after = this.crudService.findAll().length;
-    return { success: after < before };
+  async deleteCrud(@Input('id') id: number): Promise<DeleteCrudResponse> {
+    const success: boolean = await this.crudService.delete(id);
+    return {
+      success,
+    };
   }
 }

@@ -175,14 +175,14 @@ const styles = StyleSheet.create({
 });
 
 interface CrudItem {
-  id: string;
+  id: number;
   content: string;
 }
 
 export default function CrudPage() {
   const utils = trpc.useUtils();
   const [content, setContent] = useState('');
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editingContent, setEditingContent] = useState('');
 
   // Queries
@@ -216,7 +216,7 @@ export default function CrudPage() {
     createCrud.mutate({ content });
   };
 
-  const handleUpdate = (id: string) => {
+  const handleUpdate = (id: number) => {
     if (!editingContent.trim()) return;
     updateCrud?.mutate({ id, data: { content: editingContent } });
   };
@@ -345,8 +345,6 @@ export default function CrudPage() {
               </View>
             )}
           </View>
-
-
         </View>
       </View>
     </View>

@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { TRPCModule } from 'nestjs-trpc';
 import { CrudModule } from './crud/crud.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { CrudModule } from './crud/crud.module';
       autoSchemaFile: '../../packages/trpc/src/server',
     }),
     CrudModule,
+    PrismaModule,
   ],
   controllers: [],
   providers: [],

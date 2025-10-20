@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const CrudEntity = z.object({
-  id: z.string(),
+  id: z.number(),
   content: z.string(),
 });
 export type CrudEntity = z.infer<typeof CrudEntity>;
@@ -14,13 +14,12 @@ export type CreateCrudRequest = z.infer<typeof CreateCrudRequest>;
 
 export const CreateCrudResponse = z.object({
   success: z.boolean(),
-  data: CrudEntity.optional(),
 });
 export type CreateCrudResponse = z.infer<typeof CreateCrudResponse>;
 
 /* -------------------- READ -------------------- */
 export const FindOneCrudRequest = z.object({
-  id: z.string(),
+  id: z.number(),
 });
 export type FindOneCrudRequest = z.infer<typeof FindOneCrudRequest>;
 
@@ -32,7 +31,7 @@ export type FindAllCrudResponse = z.infer<typeof FindAllCrudResponse>;
 
 /* -------------------- UPDATE -------------------- */
 export const UpdateCrudRequest = z.object({
-  id: z.string(),
+  id: z.number(),
   data: z.object({
     content: z.string().optional(),
   }),
@@ -44,7 +43,7 @@ export type UpdateCrudResponse = z.infer<typeof UpdateCrudResponse>;
 
 /* -------------------- DELETE -------------------- */
 export const DeleteCrudRequest = z.object({
-  id: z.string(),
+  id: z.number(),
 });
 export type DeleteCrudRequest = z.infer<typeof DeleteCrudRequest>;
 
