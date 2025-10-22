@@ -78,17 +78,7 @@ Each `.env` file should contain the necessary variables (e.g. database URLs, API
 
 ---
 
-### 5. Update tRPC IP
-
-In your **Mobile App's env**, update the tRPC endpoint to point to your local machine’s IP address:
-
-```ts
-EXPO_PUBLIC_TRPC_URL=http://<your-local-ip>:4000/trpc
-```
-
----
-
-### 6. Setup Prisma (Database)
+### 5. Setup Prisma (Database)
 
 Go to the Prisma package:
 
@@ -105,7 +95,7 @@ pnpm prisma generate
 
 ---
 
-### 7. Run the Development Servers
+### 6. Run the Development Servers
 
 From the **root directory**:
 
