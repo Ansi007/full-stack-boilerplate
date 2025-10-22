@@ -1,74 +1,87 @@
 import { Input, Mutation, Query, Router } from 'nestjs-trpc';
 import { CrudService } from './crud.service';
+import * as crudSchema from './crud.schema';
+
 import {
-  CreateCrudRequest,
-  CreateCrudResponse,
-  FindOneCrudRequest,
-  FindOneCrudResponse,
-  FindAllCrudResponse,
-  UpdateCrudRequest,
-  UpdateCrudResponse,
-  DeleteCrudRequest,
-  DeleteCrudResponse,
+  ZCrudCreateRequest,
+  ZCrudCreateResponse,
+  ZCrudDeleteRequest,
+  ZCrudDeleteResponse,
+  ZCrudFindAllResponse,
+  ZCrudFindOneRequest,
+  ZCrudFindOneResponse,
+  ZCrudUpdateRequest,
+  ZCrudUpdateResponse,
 } from './crud.schema';
 
 @Router({ alias: 'crud' })
 export class CrudRouter {
   constructor(private readonly crudService: CrudService) {}
 
-  /* 🟢 CREATE */
   @Mutation({
-    input: CreateCrudRequest,
-    output: CreateCrudResponse,
+    input: ZCrudCreateRequest,
+    output: ZCrudCreateResponse,
   })
   async createCrud(
-    @Input() req: CreateCrudRequest,
-  ): Promise<CreateCrudResponse> {
-    const success = await this.crudService.create(req.content);
+    @Input() req: crudSchema.TCrudCreateRequest,
+  ): Promise<crudSchema.TCrudCreateResponse> {
+    const created = await this.crudService.createCrud({
+      data: {
+        content: req.content,
+      },
+    });
     return {
-      success,
+      success: created != null,
     };
   }
 
-  /* 🔵 FIND ALL */
   @Query({
-    output: FindAllCrudResponse,
+    output: ZCrudFindAllResponse,
   })
-  async findAll(): Promise<FindAllCrudResponse> {
-    return await this.crudService.findAll();
+  async findAll(): Promise<crudSchema.TCrudFindAllResponse> {
+    return (await this.crudService.findAll()) as crudSchema.TCrudFindAllResponse;
   }
 
-  /* 🟠 FIND ONE */
   @Query({
-    input: FindOneCrudRequest,
-    output: FindOneCrudResponse,
+    input: ZCrudFindOneRequest,
+    output: ZCrudFindOneResponse,
   })
-  async findOne(
-    @Input() req: FindOneCrudRequest,
-  ): Promise<FindOneCrudResponse> {
-    return await this.crudService.findOne(req.id);
+  async findOneCrud(
+    @Input() req: crudSchema.TCrudFindOneRequest,
+  ): Promise<crudSchema.TCrudFindOneResponse> {
+    const result = await this.crudService.findOne({ where: { id: req.id } });
+    if (!result) {
+      throw new Error(`Crud item with ID ${req.id} not found.`);
+    }
+    return result as crudSchema.TCrudFindOneResponse;
   }
 
-  /* 🟣 UPDATE */
   @Mutation({
-    input: UpdateCrudRequest,
-    output: UpdateCrudResponse,
+    input: ZCrudUpdateRequest,
+    output: ZCrudUpdateResponse,
   })
   async updateCrud(
-    @Input() req: UpdateCrudRequest,
-  ): Promise<UpdateCrudResponse> {
-    return await this.crudService.update(req.id, req.data);
+    @Input() req: crudSchema.TCrudUpdateRequest,
+  ): Promise<crudSchema.TCrudUpdateResponse> {
+    const updated = await this.crudService.update({
+      where: { id: req.id },
+      data: req.data,
+    });
+    return updated as crudSchema.TCrudUpdateResponse;
   }
 
-  /* 🔴 DELETE */
   @Mutation({
-    input: DeleteCrudRequest,
-    output: DeleteCrudResponse,
+    input: ZCrudDeleteRequest,
+    output: ZCrudDeleteResponse,
   })
-  async deleteCrud(@Input('id') id: number): Promise<DeleteCrudResponse> {
-    const success: boolean = await this.crudService.delete(id);
+  async deleteCrud(
+    @Input() req: crudSchema.TCrudDeleteRequest,
+  ): Promise<crudSchema.TCrudDeleteResponse> {
+    const deleted = await this.crudService.delete({
+      where: { id: req.id },
+    });
     return {
-      success,
+      success: deleted != null,
     };
   }
 }

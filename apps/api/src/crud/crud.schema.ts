@@ -1,53 +1,49 @@
 import { z } from 'zod';
 
-export const CrudEntity = z.object({
-  id: z.number(),
+export const ZCrudModel = z.object({
+  id: z.number().int(),
   content: z.string(),
 });
-export type CrudEntity = z.infer<typeof CrudEntity>;
+export type TCrudModel = z.infer<typeof ZCrudModel>;
 
-/* -------------------- CREATE -------------------- */
-export const CreateCrudRequest = z.object({
+export const ZCrudCreateRequest = z.object({
   content: z.string(),
 });
-export type CreateCrudRequest = z.infer<typeof CreateCrudRequest>;
+export type TCrudCreateRequest = z.infer<typeof ZCrudCreateRequest>;
 
-export const CreateCrudResponse = z.object({
+export const ZCrudCreateResponse = z.object({
   success: z.boolean(),
 });
-export type CreateCrudResponse = z.infer<typeof CreateCrudResponse>;
+export type TCrudCreateResponse = z.infer<typeof ZCrudCreateResponse>;
 
-/* -------------------- READ -------------------- */
-export const FindOneCrudRequest = z.object({
-  id: z.number(),
+export const ZCrudFindOneRequest = z.object({
+  id: z.number().int(),
 });
-export type FindOneCrudRequest = z.infer<typeof FindOneCrudRequest>;
+export type TCrudFindOneRequest = z.infer<typeof ZCrudFindOneRequest>;
 
-export const FindOneCrudResponse = CrudEntity;
-export type FindOneCrudResponse = z.infer<typeof FindOneCrudResponse>;
+export const ZCrudFindOneResponse = ZCrudModel;
+export type TCrudFindOneResponse = z.infer<typeof ZCrudFindOneResponse>;
 
-export const FindAllCrudResponse = z.array(CrudEntity);
-export type FindAllCrudResponse = z.infer<typeof FindAllCrudResponse>;
+export const ZCrudFindAllResponse = z.array(ZCrudModel);
+export type TCrudFindAllResponse = z.infer<typeof ZCrudFindAllResponse>;
 
-/* -------------------- UPDATE -------------------- */
-export const UpdateCrudRequest = z.object({
-  id: z.number(),
+export const ZCrudUpdateRequest = z.object({
+  id: z.number().int(),
   data: z.object({
     content: z.string().optional(),
   }),
 });
-export type UpdateCrudRequest = z.infer<typeof UpdateCrudRequest>;
+export type TCrudUpdateRequest = z.infer<typeof ZCrudUpdateRequest>;
 
-export const UpdateCrudResponse = CrudEntity;
-export type UpdateCrudResponse = z.infer<typeof UpdateCrudResponse>;
+export const ZCrudUpdateResponse = ZCrudModel;
+export type TCrudUpdateResponse = z.infer<typeof ZCrudUpdateResponse>;
 
-/* -------------------- DELETE -------------------- */
-export const DeleteCrudRequest = z.object({
-  id: z.number(),
+export const ZCrudDeleteRequest = z.object({
+  id: z.number().int(),
 });
-export type DeleteCrudRequest = z.infer<typeof DeleteCrudRequest>;
+export type TCrudDeleteRequest = z.infer<typeof ZCrudDeleteRequest>;
 
-export const DeleteCrudResponse = z.object({
+export const ZCrudDeleteResponse = z.object({
   success: z.boolean(),
 });
-export type DeleteCrudResponse = z.infer<typeof DeleteCrudResponse>;
+export type TCrudDeleteResponse = z.infer<typeof ZCrudDeleteResponse>;
