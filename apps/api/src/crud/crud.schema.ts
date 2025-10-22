@@ -21,7 +21,7 @@ export const ZCrudCreateRequest = ZBaseRequest.extend({
   content: z
     .string()
     .min(1, 'Content cannot be empty')
-    .max(1000, 'Content too long'),
+    .max(500, 'Content too long'),
 });
 
 export const ZCrudCreateResponse = ZBaseResponse.extend({

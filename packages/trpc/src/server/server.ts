@@ -13,7 +13,7 @@ const appRouter = t.router({
       content: z
         .string()
         .min(1, 'Content cannot be empty')
-        .max(1000, 'Content too long'),
+        .max(500, 'Content too long'),
     })).output(z.object({
       success: z.boolean(),
       message: z.string().optional(),
