@@ -7,6 +7,7 @@ import {
   ZCrudCreateResponse,
   ZCrudDeleteRequest,
   ZCrudDeleteResponse,
+  ZCrudFindAllRequest,
   ZCrudFindAllResponse,
   ZCrudFindOneRequest,
   ZCrudFindOneResponse,
@@ -32,14 +33,29 @@ export class CrudRouter {
     });
     return {
       success: created != null,
+      id: created?.id,
+      message: created ? 'Item created successfully' : 'Failed to create item',
     };
   }
 
   @Query({
+    input: ZCrudFindAllRequest,
     output: ZCrudFindAllResponse,
   })
-  async findAll(): Promise<crudSchema.TCrudFindAllResponse> {
-    return (await this.crudService.findAll()) as crudSchema.TCrudFindAllResponse;
+  async findAll(
+    @Input() req?: crudSchema.TCrudFindAllRequest,
+  ): Promise<crudSchema.TCrudFindAllResponse> {
+    const limit = req?.limit ?? 10;
+    const offset = req?.offset ?? 0;
+    const data = await this.crudService.findAll();
+
+    return {
+      success: data != null,
+      cruds: data,
+      total: data.length,
+      limit,
+      offset,
+    };
   }
 
   @Query({
@@ -50,10 +66,7 @@ export class CrudRouter {
     @Input() req: crudSchema.TCrudFindOneRequest,
   ): Promise<crudSchema.TCrudFindOneResponse> {
     const result = await this.crudService.findOne({ where: { id: req.id } });
-    if (!result) {
-      throw new Error(`Crud item with ID ${req.id} not found.`);
-    }
-    return result as crudSchema.TCrudFindOneResponse;
+    return result ?? null;
   }
 
   @Mutation({
@@ -67,7 +80,11 @@ export class CrudRouter {
       where: { id: req.id },
       data: req.data,
     });
-    return updated as crudSchema.TCrudUpdateResponse;
+    return {
+      success: updated != null,
+      data: updated ?? undefined,
+      message: updated ? 'Item updated successfully' : 'Failed to update item',
+    };
   }
 
   @Mutation({
@@ -82,6 +99,7 @@ export class CrudRouter {
     });
     return {
       success: deleted != null,
+      message: deleted ? 'Item deleted successfully' : 'Failed to delete item',
     };
   }
 }

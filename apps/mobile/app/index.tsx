@@ -186,7 +186,7 @@ export default function CrudPage() {
   const [editingContent, setEditingContent] = useState('');
 
   // Queries
-  const crudList = trpc.crud.findAll.useQuery(undefined, {
+  const crudList = trpc.crud.findAll.useQuery({}, {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
   });
@@ -325,15 +325,15 @@ export default function CrudPage() {
               <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#60a5fa" />
               </View>
-            ) : crudList.data && crudList.data.length > 0 ? (
+            ) : crudList.data && crudList.data.cruds.length > 0 ? (
               <>
                 <View style={styles.listHeader}>
                   <Text style={styles.listHeaderText}>
-                    {crudList.data.length} {crudList.data.length === 1 ? 'Item' : 'Items'}
+                    {crudList.data.cruds.length} {crudList.data.cruds.length === 1 ? 'Item' : 'Items'}
                   </Text>
                 </View>
                 <FlatList
-                  data={crudList.data}
+                  data={crudList.data.cruds}
                   renderItem={renderItem}
                   keyExtractor={(item) => item.id.toString()}
                   scrollEnabled

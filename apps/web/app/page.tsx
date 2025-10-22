@@ -14,7 +14,7 @@ function CrudTestUI() {
   const [editingContent, setEditingContent] = useState("");
 
   // Queries
-  const crudList = trpc.crud.findAll.useQuery(undefined, {
+  const crudList = trpc.crud.findAll.useQuery({}, {
     refetchOnWindowFocus: false,
   });
 
@@ -86,15 +86,15 @@ function CrudTestUI() {
             <div className="p-8 text-center">
               <p className="text-slate-400">Loading items...</p>
             </div>
-          ) : crudList.data && crudList.data.length > 0 ? (
+          ) : crudList.data && crudList.data.cruds.length > 0 ? (
             <div>
               <div className="px-6 py-4 bg-slate-600 border-b border-slate-500">
                 <p className="text-sm font-semibold text-slate-300 uppercase tracking-wide">
-                  {crudList.data.length} {crudList.data.length === 1 ? "Item" : "Items"}
+                  {crudList.data.cruds.length} {crudList.data.cruds.length === 1 ? "Item" : "Items"}
                 </p>
               </div>
               <ul className="divide-y divide-slate-600">
-                {crudList.data.map((item) => (
+                {crudList.data.cruds.map((item) => (
                   <li
                     key={item.id}
                     className="px-6 py-4 flex justify-between items-center hover:bg-slate-600 transition-colors"
