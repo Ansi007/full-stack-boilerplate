@@ -80,7 +80,7 @@ Each `.env` file should contain the necessary variables (e.g. database URLs, API
 
 ### 5. Update tRPC IP
 
-In your **Web app's env**, update the tRPC endpoint to point to your local machine’s IP address:
+In your **Mobile App's env**, update the tRPC endpoint to point to your local machine’s IP address:
 
 ```ts
 EXPO_PUBLIC_TRPC_URL=http://<your-local-ip>:4000/trpc
