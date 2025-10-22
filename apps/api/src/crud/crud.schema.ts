@@ -67,6 +67,7 @@ export const ZCrudDeleteRequest = ZBaseRequest.extend({
 
 export const ZCrudDeleteResponse = ZBaseResponse;
 
+// Types
 export type TCrudModel = z.infer<typeof ZCrudModel>;
 export type TCrudCreateRequest = z.infer<typeof ZCrudCreateRequest>;
 export type TCrudCreateResponse = z.infer<typeof ZCrudCreateResponse>;
