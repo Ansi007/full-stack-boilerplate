@@ -1,6 +1,6 @@
 import { Input, Mutation, Query, Router } from 'nestjs-trpc';
 import { CrudService } from './crud.service';
-import * as crudSchema from './crud.schema';
+import * as CrudSchema from './crud.schema';
 
 import {
   ZCrudCreateRequest,
@@ -24,13 +24,9 @@ export class CrudRouter {
     output: ZCrudCreateResponse,
   })
   async createCrud(
-    @Input() req: crudSchema.TCrudCreateRequest,
-  ): Promise<crudSchema.TCrudCreateResponse> {
-    const created = await this.crudService.createCrud({
-      data: {
-        content: req.content,
-      },
-    });
+    @Input() req: CrudSchema.TCrudCreateRequest,
+  ): Promise<CrudSchema.TCrudCreateResponse> {
+    const created = await this.crudService.createCrud(req.content);
     return {
       success: created != null,
       id: created?.id,
@@ -43,8 +39,8 @@ export class CrudRouter {
     output: ZCrudFindAllResponse,
   })
   async findAll(
-    @Input() req?: crudSchema.TCrudFindAllRequest,
-  ): Promise<crudSchema.TCrudFindAllResponse> {
+    @Input() req?: CrudSchema.TCrudFindAllRequest,
+  ): Promise<CrudSchema.TCrudFindAllResponse> {
     const limit = req?.limit ?? 10;
     const offset = req?.offset ?? 0;
     const data = await this.crudService.findAll();
@@ -63,9 +59,9 @@ export class CrudRouter {
     output: ZCrudFindOneResponse,
   })
   async findOneCrud(
-    @Input() req: crudSchema.TCrudFindOneRequest,
-  ): Promise<crudSchema.TCrudFindOneResponse> {
-    const result = await this.crudService.findOne({ where: { id: req.id } });
+    @Input() req: CrudSchema.TCrudFindOneRequest,
+  ): Promise<CrudSchema.TCrudFindOneResponse> {
+    const result = await this.crudService.findOne(req.id);
     return result ?? null;
   }
 
@@ -74,12 +70,9 @@ export class CrudRouter {
     output: ZCrudUpdateResponse,
   })
   async updateCrud(
-    @Input() req: crudSchema.TCrudUpdateRequest,
-  ): Promise<crudSchema.TCrudUpdateResponse> {
-    const updated = await this.crudService.update({
-      where: { id: req.id },
-      data: req.data,
-    });
+    @Input() req: CrudSchema.TCrudUpdateRequest,
+  ): Promise<CrudSchema.TCrudUpdateResponse> {
+    const updated = await this.crudService.update(req.id, req.data.content);
     return {
       success: updated != null,
       data: updated ?? undefined,
@@ -92,11 +85,9 @@ export class CrudRouter {
     output: ZCrudDeleteResponse,
   })
   async deleteCrud(
-    @Input() req: crudSchema.TCrudDeleteRequest,
-  ): Promise<crudSchema.TCrudDeleteResponse> {
-    const deleted = await this.crudService.delete({
-      where: { id: req.id },
-    });
+    @Input() req: CrudSchema.TCrudDeleteRequest,
+  ): Promise<CrudSchema.TCrudDeleteResponse> {
+    const deleted = await this.crudService.delete(req.id);
     return {
       success: deleted != null,
       message: deleted ? 'Item deleted successfully' : 'Failed to delete item',

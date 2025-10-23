@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Base schemas (Ideally in separate file)
+// Base schemas (Ideally in a separate file)
 const ZBaseRequest = z.object({
   requestId: z.string().uuid().optional(),
   timestamp: z.number().optional(),
@@ -17,6 +17,7 @@ export const ZCrudModel = z.object({
   content: z.string().min(1).max(1000),
 });
 
+// API schemas
 export const ZCrudCreateRequest = ZBaseRequest.extend({
   content: z
     .string()
@@ -50,7 +51,7 @@ export const ZCrudUpdateRequest = ZBaseRequest.extend({
   id: z.number().int().positive('ID must be positive'),
   data: z
     .object({
-      content: z.string().min(1).max(1000).optional(),
+      content: z.string().min(1).max(1000),
     })
     .refine((data) => Object.keys(data).length > 0, {
       message: 'At least one field must be provided for update',

@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, Crud } from '../generated/prisma';
+import { Crud } from '../generated/prisma';
 
 @Injectable()
 export class CrudService {
   constructor(private prisma: PrismaService) {}
 
-  async createCrud(args: Prisma.CrudCreateArgs): Promise<Crud> {
-    return this.prisma.crud.create(args);
+  async createCrud(content: string): Promise<Crud> {
+    return this.prisma.crud.create({
+      data: { content },
+    });
   }
 
   async findAll(): Promise<Crud[]> {
@@ -16,15 +18,22 @@ export class CrudService {
     });
   }
 
-  async findOne(args: Prisma.CrudFindUniqueArgs): Promise<Crud | null> {
-    return this.prisma.crud.findUnique(args);
+  async findOne(id: number): Promise<Crud | null> {
+    return this.prisma.crud.findUnique({
+      where: { id },
+    });
   }
 
-  async update(args: Prisma.CrudUpdateArgs): Promise<Crud> {
-    return this.prisma.crud.update(args);
+  async update(id: number, updatedContent: string): Promise<Crud> {
+    return this.prisma.crud.update({
+      where: { id },
+      data: { content: updatedContent },
+    });
   }
 
-  async delete(args: Prisma.CrudDeleteArgs): Promise<Crud> {
-    return this.prisma.crud.delete(args);
+  async delete(id: number): Promise<Crud> {
+    return this.prisma.crud.delete({
+      where: { id },
+    });
   }
 }

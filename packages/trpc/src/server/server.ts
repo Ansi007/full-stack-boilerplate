@@ -54,7 +54,7 @@ const appRouter = t.router({
       id: z.number().int().positive('ID must be positive'),
       data: z
         .object({
-          content: z.string().min(1).max(1000).optional(),
+          content: z.string().min(1).max(1000),
         })
         .refine((data) => Object.keys(data).length > 0, {
           message: 'At least one field must be provided for update',
