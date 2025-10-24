@@ -1,10 +1,12 @@
-// https://docs.expo.dev/guides/using-eslint/
-const { defineConfig } = require('eslint/config');
-const expoConfig = require('eslint-config-expo/flat');
+// @ts-check
+import { config as expoConfig } from "@repo/eslint-config/expo";
+import tseslint from "typescript-eslint";
 
-module.exports = defineConfig([
-  expoConfig,
-  {
-    ignores: ['dist/*'],
+export default tseslint.config(...expoConfig, {
+  languageOptions: {
+    parserOptions: {
+      projectService: true,
+      tsconfigRootDir: import.meta.dirname,
+    },
   },
-]);
+});

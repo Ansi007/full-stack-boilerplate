@@ -16,10 +16,23 @@
       "dependsOn": ["^build"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "cache": true,
+      "outputs": []
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"],
+      "cache": false,
+      "outputs": []
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^check-types"],
+      "cache": true,
+      "outputs": []
+    },
+    "test": {
+      "cache": true,
+      "outputs": ["coverage/**"]
     }
   }
 }

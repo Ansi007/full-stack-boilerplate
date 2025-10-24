@@ -14,9 +14,12 @@ function CrudTestUI() {
   const [editingContent, setEditingContent] = useState("");
 
   // Queries
-  const crudList = trpc.crud.findAll.useQuery({}, {
-    refetchOnWindowFocus: false,
-  });
+  const crudList = trpc.crud.findAll.useQuery(
+    {},
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   // Mutations
   const createCrud = trpc.crud.createCrud.useMutation({
@@ -56,7 +59,9 @@ function CrudTestUI() {
               BE Tech Stack CRUD
             </h1>
           </div>
-          <p className="text-slate-400">NextJs (tailwindcss), NestJs, Expo, Trpc</p>
+          <p className="text-slate-400">
+            NextJs (tailwindcss), NestJs, Expo, Trpc
+          </p>
         </div>
 
         {/* Input Section */}
@@ -90,7 +95,8 @@ function CrudTestUI() {
             <div>
               <div className="px-6 py-4 bg-slate-600 border-b border-slate-500">
                 <p className="text-sm font-semibold text-slate-300 uppercase tracking-wide">
-                  {crudList.data.cruds.length} {crudList.data.cruds.length === 1 ? "Item" : "Items"}
+                  {crudList.data.cruds.length}{" "}
+                  {crudList.data.cruds.length === 1 ? "Item" : "Items"}
                 </p>
               </div>
               <ul className="divide-y divide-slate-600">
@@ -106,7 +112,10 @@ function CrudTestUI() {
                         onChange={(e) => setEditingContent(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && editingContent.trim()) {
-                            updateCrud?.mutate({ id: item.id, data: {content: editingContent} });
+                            updateCrud?.mutate({
+                              id: item.id,
+                              data: { content: editingContent },
+                            });
                           } else if (e.key === "Escape") {
                             setEditingId(null);
                           }
@@ -130,8 +139,18 @@ function CrudTestUI() {
                       disabled={deleteCrud.isPending}
                       className="text-slate-400 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors p-2 hover:bg-slate-700 rounded ml-2"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </li>
@@ -140,7 +159,9 @@ function CrudTestUI() {
             </div>
           ) : (
             <div className="p-12 text-center">
-              <p className="text-slate-400 text-lg">No items yet. Add one to get started!</p>
+              <p className="text-slate-400 text-lg">
+                No items yet. Add one to get started!
+              </p>
             </div>
           )}
         </div>

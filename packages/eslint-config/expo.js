@@ -2,7 +2,7 @@
 import { config as baseConfig } from "./base.js";
 
 /**
- * ESLint configuration for Next.js projects.
+ * ESLint configuration for Expo projects.
  *
  * @type {import("eslint").Linter.Config[]}
  */
@@ -13,8 +13,11 @@ export const config = [
       "eslint.config.js",
       "postcss.config.js",
       "tailwind.config.js",
-      "next-env.d.ts",
-      ".next/**",
+      "expo-env.d.ts",
+      ".expo/**",
+      ".android/**",
+      ".ios/**",
+      "./scripts/**"
     ],
   },
 ];
