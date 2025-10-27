@@ -1,4 +1,4 @@
-# 🧩 BE Tech Stack Monorepo
+# 🧩 BE Tech Stack Monorepo (Full-Stack)
 
 A **modern full-stack TypeScript monorepo** using:
 
